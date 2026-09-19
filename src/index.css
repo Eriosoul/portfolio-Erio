@@ -1,0 +1,76 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-canvas font-sans text-fg antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    @apply bg-accent text-canvas;
+  }
+
+  /* Un unico anillo de foco para todo el sitio, visible sobre fondo oscuro. */
+  :focus-visible {
+    @apply outline-none ring-2 ring-accent ring-offset-2 ring-offset-canvas;
+  }
+
+  /* El ancla #about y compania aterrizaban debajo de la cabecera fija. */
+  section[id] {
+    scroll-margin-top: 4.5rem;
+  }
+}
+
+@layer components {
+  .contactInput {
+    @apply w-full rounded-lg border border-line bg-elevated px-4 py-3 text-sm text-fg
+           placeholder-fg-subtle outline-none transition-colors
+           focus:border-accent-muted focus:bg-elevated;
+  }
+
+  /* Bloque de codigo resaltado por Shiki en el build. Shiki fija el fondo
+     con estilo en linea, de ahi el !bg-transparent para integrarlo. */
+  .code-snippet pre {
+    @apply !m-0 max-h-72 overflow-auto !bg-transparent p-4 text-xs leading-relaxed;
+    scrollbar-width: thin;
+  }
+
+  .code-snippet code {
+    counter-reset: line;
+    @apply font-mono;
+  }
+
+  .code-snippet .line::before {
+    counter-increment: line;
+    content: counter(line);
+    @apply mr-4 inline-block w-6 select-none text-right text-fg-subtle/40;
+  }
+
+  .card-hover {
+    @apply transition-[transform,box-shadow,border-color] duration-300
+           hover:-translate-y-0.5 hover:border-accent-muted hover:shadow-lift;
+  }
+}
+
+/* Quien pide menos movimiento recibe menos movimiento, sin excepciones. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
